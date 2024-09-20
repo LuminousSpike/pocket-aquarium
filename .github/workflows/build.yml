@@ -1,0 +1,100 @@
+name: Build
+
+# Trigger the workflow on push to main branch or on pull requests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Install dependencies
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential make unzip wget
+
+    # Download and install GBDK-2020
+    - name: Download GBDK-2020
+      env:
+        GBDK_VERSION: 4.3.0  # Specify the version you want to use
+      run: |
+        wget https://github.com/gbdk-2020/gbdk-2020/releases/download/${GBDK_VERSION}/gbdk-linux64.tar.gz
+        tar -xzf gbdk-linux64.tar.gz
+        sudo ln -s $PWD/gbdk/bin/* /usr/local/bin/
+
+    # Set GBDK_HOME environment variable
+    - name: Set GBDK_HOME
+      run: echo "GBDK_HOME=$PWD/gbdk/" >> $GITHUB_ENV
+
+    # Verify GBDK-2020 Installation
+    - name: Verify GBDK Installation
+      run: |
+        rgbasm --version
+        rgblink --version
+        rgbgfx --version
+
+    # Build the project
+    - name: Build Game
+      run: |
+        make clean
+        make
+
+    # Zip the compiled ROM
+    - name: Zip ROM
+      run: zip -j pocket_aquarium.zip obj/pocket_aquarium.gbc
+
+    # Upload the zipped ROM as an artifact
+    - name: Upload ROM
+      uses: actions/upload-artifact@v3
+      with:
+        name: game-rom
+        path: pocket_aquarium.zip
+
+  release:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Download the artifact from the build job
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: game-rom
+        path: ./ # Downloads to the current directory
+
+    # Create a release
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    # Upload the zipped ROM to the release
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: pocket_aquarium.zip
+        asset_name: pocket_aquarium.zip
+        asset_content_type: application/zip
