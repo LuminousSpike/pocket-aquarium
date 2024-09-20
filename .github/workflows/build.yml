@@ -35,13 +35,6 @@ jobs:
     - name: Set GBDK_HOME
       run: echo "GBDK_HOME=$PWD/gbdk/" >> $GITHUB_ENV
 
-    # Verify GBDK-2020 Installation
-    - name: Verify GBDK Installation
-      run: |
-        rgbasm --version
-        rgblink --version
-        rgbgfx --version
-
     # Build the project
     - name: Build Game
       run: |
