@@ -63,3 +63,6 @@ clean:
 #	rm -f  *.gbc *.ihx *.cdb *.adb *.noi *.map
 	rm -f  $(OBJDIR)/*.*
 
+# Run clang-format on all .c files in the src directory
+format:
+	find $(SRCDIR) -name '*.c' -o -name '*.h' -exec clang-format -i {} +
