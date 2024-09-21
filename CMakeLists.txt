@@ -8,12 +8,14 @@ else()
   set(GBDK_HOME $ENV{GBDK_HOME})
 endif()
 
+get_filename_component(GBDK_HOME "${GBDK_HOME}" ABSOLUTE)
+
 # Find the LCC compiler
 find_program(LCC "${GBDK_HOME}/bin/lcc" REQUIRED)
 
 # Set compiler and linker flags
 set(CMAKE_C_COMPILER ${LCC})
-set(CMAKE_C_FLAGS "-Wm-yC")
+set(CMAKE_C_FLAGS "-Wm-yC -I\"${GBDK_HOME}/include\" -msm83 -D__PORT_sm83 -D__TARGET_GB -D__SDCC")
 
 # Add debug flags if GBDK_DEBUG is set
 option(GBDK_DEBUG "Enable GBDK debug mode" OFF)
