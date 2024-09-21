@@ -1,8 +1,6 @@
 // main.c
 #include <gb/cgb.h>
 #include <gb/gb.h>
-
-#include "gb/drawing.h"
 #include <rand.h>
 #include <stdio.h>
 
@@ -88,8 +86,8 @@ void
 main(void)
 {
     score_t score;
-
     init();
+
     score_init(&score);
 
     // Main game loop
