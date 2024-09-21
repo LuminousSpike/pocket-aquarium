@@ -7,10 +7,10 @@
 
 #define MAX_FISH 5
 #define TILE_FISH 2
-#define INITIAL_HUNGER 59.7 * 30 // 30 seconds
+#define INITIAL_HUNGER (59.7 * 30) // 30 seconds
 #define COIN_FULLNESS_LIMIT 3
-#define FISH_MOVE_INTERVAL 60      // Number of frames before a fish changes direction
-#define HUNGER_THRESHOLD 59.7 * 10 // Fish starts seeking food when the hunger timer is below this - about 10 seconds
+#define FISH_MOVE_INTERVAL 60        // Number of frames before a fish changes direction
+#define HUNGER_THRESHOLD (59.7 * 10) // Fish starts seeking food when the hunger timer is below this - about 10 seconds
 
 typedef struct
 {
