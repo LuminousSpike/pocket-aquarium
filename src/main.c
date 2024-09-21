@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <rand.h>
 #include "../res/background.h"
+#include "../res/cursor_sprite.h"
+#include "../res/guppy_sprite.h"
+#include "../res/coin_sprite.h"
+#include "../res/food_sprite.h"
+#include "../res/hungry_guppy_sprite.h"
 #include "fish.h"
 #include "coin.h"
 #include "cursor.h"
@@ -13,33 +18,32 @@
 #define MAX_SPRITES 40
 uint8_t allocated_sprites[MAX_SPRITES];  // Tracks whether each sprite ID is in use
 
-// Define background palette (3 colors + transparent)
-const UWORD bkg_palette[] = {
-    RGB(31, 31, 31),  // Light cyan
-    RGB(12, 24, 31),  // Dark blue
-    RGB(31, 16, 8),   // Sandy brown
-    RGB(8, 24, 8)     // Green
-};
-
-// Define sprite palette (3 colors + transparent)
-const UWORD sprite_palette[] = {
-    RGB_RED, RGB_GREEN, RGB_BLUE, RGB_BLACK
-};
-
 void init_colors(void) {
-    // Set background palette
-    set_bkg_palette(0, 1, bkg_palette);
+    // Set background palette for Game Boy Color
+    set_bkg_palette(0, background_PALETTE_COUNT, background_palettes);
     
     // Set sprite palette
-    set_sprite_palette(0, 1, sprite_palette);
+    set_sprite_palette(0, cursor_sprite_PALETTE_COUNT, cursor_sprite_palettes);
+    set_sprite_palette(1, guppy_sprite_PALETTE_COUNT, guppy_sprite_palettes);
+    set_sprite_palette(2, hungry_guppy_sprite_PALETTE_COUNT, hungry_guppy_sprite_palettes);
+    set_sprite_palette(3, coin_sprite_PALETTE_COUNT, coin_sprite_palettes);
+    set_sprite_palette(4, food_sprite_PALETTE_COUNT, food_sprite_palettes);
 }
 
 void init_background(void) {
-    // Load the background tiles into VRAM
-    set_bkg_data(0, background_TILE_COUNT, background_tiles);
+    // Load the background tiles into VRAM (tile data for the background)
+    set_bkg_data(background_TILE_ORIGIN, background_TILE_COUNT, background_tiles);
 
-    // Set up the background map
-    set_bkg_tiles(0, 0, 20, 18, background_map);
+    // Set up the background map (layout of tiles on the screen)
+    set_bkg_tiles(0, 0, background_WIDTH / 8, background_HEIGHT / 8, background_map);
+
+    // Optionally: Set background attributes (for Game Boy Color, different palettes per tile)
+    // If you're using background attributes, set them like this:
+    if (background_MAP_ATTRIBUTES) {
+        VBK_REG = 1;  // Switch to VRAM bank 1 to modify attributes
+        set_bkg_tiles(0, 0, background_WIDTH / 8, background_HEIGHT / 8, background_map_attributes);
+        VBK_REG = 0;  // Switch back to VRAM bank 0 to modify tile numbers
+    }
 }
 
 void init(void) {
