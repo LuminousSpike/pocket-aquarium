@@ -13,12 +13,15 @@ score_init(score_t *score)
 void
 score_render(score_t *score)
 {
+    const int score_x = 1;
+    const int score_y = 1;
+
     if (score->last_money == score->money)
         return;
 
-    gotogxy(0, 0);
+    gotogxy(score_x, score_y);
     gprintf("     ");
-    gotogxy(0, 0);
+    gotogxy(score_x, score_y);
     gprintf("$%d", score->money);
 
     score->last_money = score->money;
