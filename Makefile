@@ -17,6 +17,21 @@ ifdef GBDK_DEBUG
 	LCCFLAGS += -debug -v
 endif
 
+# Detect the number of CPU cores
+ifeq ($(OS),Windows_NT)
+	JOBS := $(NUMBER_OF_PROCESSORS)
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		JOBS := $(shell nproc)
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		JOBS := $(shell sysctl -n hw.ncpu)
+	endif
+endif
+
+# Use parallel execution by default, using the number of detected cores
+MAKEFLAGS += --jobs=$(JOBS)
 
 # You can set the name of the .gbc ROM file here
 PROJECTNAME    = pocket_aquarium
@@ -63,3 +78,6 @@ clean:
 #	rm -f  *.gbc *.ihx *.cdb *.adb *.noi *.map
 	rm -f  $(OBJDIR)/*.*
 
+# Run clang-format on all .c files in the src directory
+format:
+	find $(SRCDIR) -name '*.c' -o -name '*.h' -exec clang-format -i {} +
