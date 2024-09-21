@@ -2,14 +2,19 @@
 #include "../res/numbers.h"
 #include <gb/drawing.h>
 #include <gb/gb.h>
+#include <stdint.h>
 #include <string.h>
 
-static int tile_base = 0;
+static uint16_t numbers_base = 0;
+static uint16_t symbols_base = 0;
 
 void
-score_tile_base(int base)
+score_tile_base(int numbers, int symbols)
 {
-    tile_base = base;
+    if (numbers >= 0)
+        numbers_base = (uint16_t)numbers;
+    if (symbols >= 0)
+        symbols_base = (uint16_t)symbols;
 }
 
 void
@@ -20,10 +25,12 @@ score_init(score_t *score)
     score->money = STARTING_BALANCE;
 }
 
+#define SCORE_MAX_DIGITS (3)
+
 void
 score_render(score_t *score)
 {
-    uint8_t scoredigits[5] = {0};
+    uint8_t scoredigits[SCORE_MAX_DIGITS] = {0};
     const int score_x = 1;
     const int score_y = 1;
 
@@ -31,16 +38,21 @@ score_render(score_t *score)
         return;
 
     int temp_money = score->money;
-    for (int i = 4; i >= 0; i--)
+    for (int i = (SCORE_MAX_DIGITS - 1); i >= 0; i--)
     {
         scoredigits[i] = temp_money % 10;
         temp_money /= 10;
     }
 
-    for (int i = 0; i < 5; i++)
+    /* Location of the money symbol */
+    set_bkg_tile_xy(score_x, score_y, symbols_base + 0);
+
+    for (int i = 0; i < SCORE_MAX_DIGITS; i++)
     {
+        const uint8_t x_start = score_x + 1; /* 1 is the money symbol */
+
         /* TODO: Would prefer to use window, but this'll do...*/
-        set_bkg_tile_xy(score_x + i, score_y, tile_base + scoredigits[i]);
+        set_bkg_tile_xy(x_start + i, score_y, numbers_base + scoredigits[i]);
     }
 
     score->last_money = score->money;

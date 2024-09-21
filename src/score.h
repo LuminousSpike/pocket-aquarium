@@ -50,4 +50,4 @@ extern void
 score_collect_coin(score_t *score, score_coin_t coin);
 
 extern void
-score_tile_base(int base);
+score_tile_base(int number_base, int symbol_base);

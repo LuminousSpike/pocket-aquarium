@@ -11,6 +11,7 @@
 #include "../res/guppy_sprite.h"
 #include "../res/hungry_guppy_sprite.h"
 #include "../res/numbers.h"
+#include "../res/symbols.h"
 #include "coin.h"
 #include "cursor.h"
 #include "fish.h"
@@ -52,8 +53,12 @@ init_background(void)
 
     /* TOOD: Ideally this wouldn't all be done in the same place */
     set_bkg_data(idx, NUMBERS_TILE_COUNT, numbers_tiles);
-    score_tile_base(idx);
-    idx += background_TILE_COUNT;
+    score_tile_base(idx, -1);
+    idx += NUMBERS_TILE_COUNT;
+
+    set_bkg_data(idx, SYMBOLS_TILE_COUNT, symbols_tiles);
+    score_tile_base(-1, idx);
+    idx += SYMBOLS_TILE_COUNT;
 
     set_bkg_palette(0, background_PALETTE_COUNT, background_palettes);
 

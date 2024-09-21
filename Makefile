@@ -83,6 +83,7 @@ format:
 
 background-tiles:
 	@go run utils/spritegen/*.go -format gb -image ./assests/pngs/numbers.png -output res/numbers
+	@go run utils/spritegen/*.go -format gb -image ./assests/pngs/symbols.png -output res/symbols
 	find res -name '*.c' -exec clang-format -i {} +
 
 .PHONY: background-tiles
