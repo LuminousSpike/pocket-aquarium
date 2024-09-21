@@ -17,7 +17,7 @@
 #include "food.h"
 
 #define MAX_SPRITES 40
-uint8_t allocated_sprites[MAX_SPRITES]; // Tracks whether each sprite ID is in use
+uint8_t allocated_sprites[MAX_SPRITES];  // Tracks whether each sprite ID is in use
 
 void init_colors(void) {
     // Set background palette for Game Boy Color
