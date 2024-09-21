@@ -14,7 +14,6 @@ void
 free_sprite(uint8_t sprite_id);
 
 Coin coin_list[MAX_COINS];
-uint16_t player_coins = 0;
 uint8_t coin_speed_counter = 0; // Counter to slow down the coin drop speed
 
 void
@@ -108,7 +107,6 @@ update_coins(score_t *score)
                 free_sprite(coin->sprite_id); // Free the sprite here
                 coin->active = false;
                 coin->sprite_id = NO_SPRITE; // Mark the sprite as unused
-                player_coins += COIN_VALUE; // Increment the player's coin count
                 play_sound(SOUND_COIN); // Play sound for collecting the coin
             }
         }
