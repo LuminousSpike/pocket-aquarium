@@ -48,3 +48,6 @@ score_can_afford_food(score_t *score, score_food_t food);
 
 extern void
 score_collect_coin(score_t *score, score_coin_t coin);
+
+extern void
+score_tile_base(int base);

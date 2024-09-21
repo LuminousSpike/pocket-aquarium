@@ -1,6 +1,16 @@
 #include "score.h"
+#include "../res/numbers.h"
 #include <gb/drawing.h>
+#include <gb/gb.h>
 #include <string.h>
+
+static int tile_base = 0;
+
+void
+score_tile_base(int base)
+{
+    tile_base = base;
+}
 
 void
 score_init(score_t *score)
@@ -13,16 +23,25 @@ score_init(score_t *score)
 void
 score_render(score_t *score)
 {
+    uint8_t scoredigits[5] = {0};
     const int score_x = 1;
     const int score_y = 1;
 
     if (score->last_money == score->money)
         return;
 
-    gotogxy(score_x, score_y);
-    gprintf("     ");
-    gotogxy(score_x, score_y);
-    gprintf("$%d", score->money);
+    int temp_money = score->money;
+    for (int i = 4; i >= 0; i--)
+    {
+        scoredigits[i] = temp_money % 10;
+        temp_money /= 10;
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        /* TODO: Would prefer to use window, but this'll do...*/
+        set_bkg_tile_xy(score_x + i, score_y, tile_base + scoredigits[i]);
+    }
 
     score->last_money = score->money;
 }

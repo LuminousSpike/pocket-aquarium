@@ -7,6 +7,7 @@
 #include "coin.h"
 #include "food.h"
 #include "utils.h"
+#include <rand.h>
 
 Fish fish_list[MAX_FISH];
 uint8_t fish_speed_counter = 0; // Counter to slow down fish movement

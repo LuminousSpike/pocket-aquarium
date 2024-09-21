@@ -10,6 +10,7 @@
 #include "../res/food_sprite.h"
 #include "../res/guppy_sprite.h"
 #include "../res/hungry_guppy_sprite.h"
+#include "../res/numbers.h"
 #include "coin.h"
 #include "cursor.h"
 #include "fish.h"
@@ -38,13 +39,23 @@ init_colors(void)
 void
 init_background(void)
 {
+    int idx = 0;
+
     // Load the background tiles into VRAM (tile data for the background)
     set_bkg_data(background_TILE_ORIGIN, background_TILE_COUNT,
                  background_tiles);
+    idx += background_TILE_COUNT;
 
     // Set up the background map (layout of tiles on the screen)
     set_bkg_tiles(0, 0, background_WIDTH / 8, background_HEIGHT / 8,
                   background_map);
+
+    /* TOOD: Ideally this wouldn't all be done in the same place */
+    set_bkg_data(idx, NUMBERS_TILE_COUNT, numbers_tiles);
+    score_tile_base(idx);
+    idx += background_TILE_COUNT;
+
+    set_bkg_palette(0, background_PALETTE_COUNT, background_palettes);
 
     // Optionally: Set background attributes (for Game Boy Color, different
     // palettes per tile) If you're using background attributes, set them like
@@ -79,6 +90,7 @@ init(void)
     DISPLAY_ON;
     SPRITES_8x16;
     SHOW_BKG;
+    // SHOW_WIN;
     SHOW_SPRITES;
 }
 
