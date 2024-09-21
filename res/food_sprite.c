@@ -20,7 +20,7 @@ const uint8_t food_sprite_tiles[16] = {
 };
 
 const metasprite_t food_sprite_metasprite0[] = {
-	METASPR_ITEM(-4, -4, 0, S_PAL(0)),
+	METASPR_ITEM(-4, -4, 0, S_PAL(4)),
 	METASPR_TERM
 };
 

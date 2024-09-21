@@ -11,17 +11,21 @@
 #define background_TILE_H 8
 #define background_WIDTH 160
 #define background_HEIGHT 144
-#define background_TILE_COUNT 184
-#define background_PALETTE_COUNT 1
+#define background_TILE_COUNT 245
+#define background_PALETTE_COUNT 8
 #define background_COLORS_PER_PALETTE 4
-#define background_TOTAL_COLORS 4
-#define background_MAP_ATTRIBUTES 0
+#define background_TOTAL_COLORS 32
+#define background_MAP_ATTRIBUTES background_map_attributes
+#define background_MAP_ATTRIBUTES_WIDTH 20
+#define background_MAP_ATTRIBUTES_HEIGHT 18
+#define background_MAP_ATTRIBUTES_PACKED_WIDTH 20
+#define background_MAP_ATTRIBUTES_PACKED_HEIGHT 18
 extern const unsigned char background_map[360];
-#define background_map_attributes background_map
+extern const unsigned char background_map_attributes[360];
 
 BANKREF_EXTERN(background)
 
-extern const palette_color_t background_palettes[4];
-extern const uint8_t background_tiles[2944];
+extern const palette_color_t background_palettes[32];
+extern const uint8_t background_tiles[3920];
 
 #endif

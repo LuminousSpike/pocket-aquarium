@@ -1,0 +1,3 @@
+/Users/sam/Code/pocket-aquarium/build/CMakeFiles/pocket_aquarium.dir
+/Users/sam/Code/pocket-aquarium/build/CMakeFiles/edit_cache.dir
+/Users/sam/Code/pocket-aquarium/build/CMakeFiles/rebuild_cache.dir

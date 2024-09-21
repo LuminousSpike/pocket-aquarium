@@ -1,4 +1,6 @@
 #include "fish.h"
+#include "../res/guppy_sprite.h"
+#include "../res/hungry_guppy_sprite.h"
 #include "../res/blank_tile.h"
 #include "../res/guppy_sprite.h"
 #include "coin.h"
@@ -12,12 +14,10 @@ uint8_t fish_speed_counter = 0; // Counter to slow down fish movement
 #define MAX_MOVE_INTERVAL 120 // Maximum frames before a fish changes direction
 #define FISH_TILE_INDEX 2
 
-void
-init_fish(void)
-{
-    // Load the guppy tiles into VRAM
+void init_fish(void) {
+    // Load the normal guppy and hungry guppy tiles into VRAM
     set_sprite_data(FISH_TILE_INDEX, guppy_sprite_TILE_COUNT, guppy_sprite_tiles);
-    set_sprite_data(FISH_TILE_INDEX + 1, blank_tile_TILE_COUNT, blank_tile_tiles);
+    set_sprite_data(FISH_TILE_INDEX + 2, hungry_guppy_sprite_TILE_COUNT, hungry_guppy_sprite_tiles);
 
     for (uint8_t i = 0; i < MAX_FISH; i++)
     {
