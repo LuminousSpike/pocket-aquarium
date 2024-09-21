@@ -22,7 +22,8 @@ init_coins(void)
 {
     // Load the coin tiles into VRAM
     set_sprite_data(COIN_TILE_INDEX, coin_sprite_TILE_COUNT, coin_sprite_tiles);
-    set_sprite_data(COIN_TILE_INDEX + 1, blank_tile_TILE_COUNT, blank_tile_tiles);
+    set_sprite_data(COIN_TILE_INDEX + 1, blank_tile_TILE_COUNT,
+                    blank_tile_tiles);
 
     // Initialize all coins in the pool as inactive
     for (uint8_t i = 0; i < MAX_COINS; i++)
@@ -55,15 +56,17 @@ spawn_coin(uint8_t x, uint8_t y)
             coin->active = true;
 
             // Set the coin's sprite tile
-            set_sprite_data(COIN_TILE_INDEX, coin_sprite_TILE_COUNT, coin_sprite_tiles);
-            move_metasprite(coin_sprite_metasprites[0], COIN_TILE_INDEX, coin->sprite_id, coin->x, coin->y);
+            set_sprite_data(COIN_TILE_INDEX, coin_sprite_TILE_COUNT,
+                            coin_sprite_tiles);
+            move_metasprite(coin_sprite_metasprites[0], COIN_TILE_INDEX,
+                            coin->sprite_id, coin->x, coin->y);
             break;
         }
     }
 }
 
 void
-update_coins(void)
+update_coins(score_t *score)
 {
     coin_speed_counter++; // Increment the counter every frame
 
@@ -92,18 +95,21 @@ update_coins(void)
             else
             {
                 // Update the sprite's position
-                move_metasprite(coin_sprite_metasprites[0], COIN_TILE_INDEX, coin->sprite_id, coin->x, coin->y);
+                move_metasprite(coin_sprite_metasprites[0], COIN_TILE_INDEX,
+                                coin->sprite_id, coin->x, coin->y);
             }
 
             // Check if the cursor is over the coin
             if (cursor_over_coin(coin))
             {
+                score_collect_coin(score, SCORE_COIN_BASIC);
+
                 // Deactivate the coin without checking for A button press
                 free_sprite(coin->sprite_id); // Free the sprite here
                 coin->active = false;
                 coin->sprite_id = NO_SPRITE; // Mark the sprite as unused
-                player_coins += COIN_VALUE;  // Increment the player's coin count
-                play_sound(SOUND_COIN);      // Play sound for collecting the coin
+                player_coins += COIN_VALUE; // Increment the player's coin count
+                play_sound(SOUND_COIN); // Play sound for collecting the coin
             }
         }
     }
@@ -115,13 +121,17 @@ cursor_over_coin(Coin *coin)
     extern Cursor cursor;
 
     // Calculate the center points of the cursor and the coin
-    uint8_t cursor_center_x = cursor.x + 4; // Cursor width is 8, so center x is +4 pixels
-    uint8_t cursor_center_y = cursor.y + 8; // Cursor height is 16, so center y is +8 pixels
+    uint8_t cursor_center_x =
+        cursor.x + 4; // Cursor width is 8, so center x is +4 pixels
+    uint8_t cursor_center_y =
+        cursor.y + 8; // Cursor height is 16, so center y is +8 pixels
 
-    uint8_t coin_center_x = coin->x + 4; // Coin is 8x8, so center x is +4 pixels
+    uint8_t coin_center_x =
+        coin->x + 4; // Coin is 8x8, so center x is +4 pixels
     uint8_t coin_center_y = coin->y + 4; // Coin center y is +4 pixels
 
-    // Use the ABS macro from utils.h to check if the centers are within 8 pixels
-    // of each other
-    return (ABS(cursor_center_x - coin_center_x) < 8 && ABS(cursor_center_y - coin_center_y) < 8);
+    // Use the ABS macro from utils.h to check if the centers are within 8
+    // pixels of each other
+    return (ABS(cursor_center_x - coin_center_x) < 8 &&
+            ABS(cursor_center_y - coin_center_y) < 8);
 }
