@@ -1,2 +1,4 @@
 obj/
 gdk/
+.cache
+build
