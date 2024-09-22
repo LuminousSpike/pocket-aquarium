@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "score.h"
+
 #define MAX_COINS 5
 #define TILE_COIN 1
 #define COIN_VALUE 1
@@ -27,7 +29,7 @@ init_coins(void);
 void
 spawn_coin(uint8_t x, uint8_t y);
 void
-update_coins(void);
+update_coins(score_t *score);
 bool
 cursor_over_coin(Coin *coin);
 void

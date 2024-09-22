@@ -1,15 +1,15 @@
 #
-# A Makefile that compiles all .c and .s files in "src" and "res" 
+# A Makefile that compiles all .c and .s files in "src" and "res"
 # subdirectories and places the output in a "obj" subdirectory
 #
 
-# If you move this project you can change the directory 
+# If you move this project you can change the directory
 # to match your GBDK root directory (ex: GBDK_HOME = "C:/GBDK/"
 ifndef GBDK_HOME
 	GBDK_HOME = ./gbdk/
 endif
 
-LCC = $(GBDK_HOME)bin/lcc 
+LCC = $(GBDK_HOME)bin/lcc
 LCCFLAGS += -Wm-yC
 
 # GBDK_DEBUG = ON
@@ -44,7 +44,7 @@ CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreac
 ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
 OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
 
-all:	prepare $(BINS)
+all:	prepare background-tiles $(BINS)
 
 compile.bat: Makefile
 	@echo "REM Automatically generated from Makefile" > compile.bat
@@ -75,9 +75,15 @@ prepare:
 	mkdir -p $(OBJDIR)
 
 clean:
-#	rm -f  *.gbc *.ihx *.cdb *.adb *.noi *.map
 	rm -f  $(OBJDIR)/*.*
 
 # Run clang-format on all .c files in the src directory
 format:
 	find $(SRCDIR) -name '*.c' -o -name '*.h' -exec clang-format -i {} +
+
+background-tiles:
+	@go run utils/spritegen/*.go -format gb -image ./assests/pngs/numbers.png -output res/numbers
+	@go run utils/spritegen/*.go -format gb -image ./assests/pngs/symbols.png -output res/symbols
+	find res -name '*.c' -exec clang-format -i {} +
+
+.PHONY: background-tiles
