@@ -5,26 +5,24 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define MAX_FISH 5
+#define MAX_FISH 10
+#define MAX_FISH_SPEED 3
 #define TILE_FISH 2
-#define INITIAL_HUNGER 59.7 * 30 // 30 seconds
+#define INITIAL_HUNGER 0xFF
 #define COIN_FULLNESS_LIMIT 3
-#define FISH_MOVE_INTERVAL                                                     \
-    60 // Number of frames before a fish changes direction
-#define HUNGER_THRESHOLD                                                       \
-    59.7 * 10 // Fish starts seeking food when the hunger timer is below this -
-              // about 10 seconds
+#define HUNGER_THRESHOLD 100
 
 typedef struct
 {
     uint8_t x, y;
     uint8_t sprite_id;
-    uint16_t hunger_timer;
+    uint8_t hunger_timer;
     uint8_t coin_fullness;
     bool alive;
     bool is_hungry;
-    int8_t dx, dy;           // Current direction of movement
-    uint16_t movement_timer; // Timer to determine when to change direction
+    bool has_found_food;
+    int8_t dx, dy, dspeed;  // Current direction of movement
+    uint8_t movement_timer; // Timer to determine when to change direction
 } Fish;
 
 extern Fish fish_list[MAX_FISH];

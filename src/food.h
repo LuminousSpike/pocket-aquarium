@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define MAX_FOOD 3
+#define MAX_FOOD 5
 #define TILE_FOOD 2
 #define NO_SPRITE 255
 #define FOOD_SPEED 1 // Speed at which the food pellet drops
