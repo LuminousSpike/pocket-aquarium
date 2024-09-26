@@ -1,7 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-// Improved ABS macro for optimization
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ABSDIFF(a, b) (((a) > (b)) ? ((a) - (b)) : ((b) - (a)))
 
 #endif // UTILS_H

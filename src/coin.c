@@ -130,6 +130,6 @@ cursor_over_coin(Coin *coin)
 
     // Use the ABS macro from utils.h to check if the centers are within 8
     // pixels of each other
-    return (ABS(cursor_center_x - coin_center_x) < 8 &&
-            ABS(cursor_center_y - coin_center_y) < 8);
+    return ABSDIFF(cursor_center_x - coin_center_x,
+                   cursor_center_y - coin_center_y) < 8;
 }
