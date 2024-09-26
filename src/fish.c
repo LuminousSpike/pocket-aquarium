@@ -106,15 +106,12 @@ update_fish(void)
     Fish *fish = &fish_list[fish_speed_counter % MAX_FISH];
     if (fish->alive)
     {
-        if (fish->hunger_timer < HUNGER_THRESHOLD &&
-            nearest_food_position(fish, &(fish->dx), &(fish->dy)))
+        if (fish->hunger_timer < HUNGER_THRESHOLD)
         {
-            move_fish(fish); // Move towards food
+            nearest_food_position(fish, &(fish->dx), &(fish->dy));
         }
-        else
-        {
-            move_fish(fish); // Move randomly
-        }
+
+        move_fish(fish);
 
         // Decrease hunger timer
         fish->is_hungry = (fish->hunger_timer < HUNGER_THRESHOLD);
