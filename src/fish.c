@@ -58,8 +58,8 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
         Food *food = &food_list[i];
         if (food->active)
         {
-            uint16_t distance = ABSDIFF(
-                fish->x - food->x, fish->y - food->y); // Manhattan distance
+            uint8_t distance = ABSDIFF(fish->x - food->x,
+                                       fish->y - food->y); // Manhattan distance
             if (distance < nearest_distance)
             {
                 nearest_distance = distance;
