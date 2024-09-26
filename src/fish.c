@@ -84,7 +84,7 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
 }
 
 void
-display_fish(Fish *fish)
+display_fish(const Fish *fish)
 {
     // Update sprite position based on hunger state
     if (fish->is_hungry)
