@@ -53,6 +53,8 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
     Food *nearest_food = NULL;
     uint8_t nearest_distance = 0xFF; // Start with max distance
 
+    fish->has_found_food = false;
+
     for (uint8_t i = 0; i < MAX_FOOD; i++)
     {
         Food *food = &food_list[i];
@@ -78,7 +80,6 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
         return true; // Food is found
     }
 
-    fish->has_found_food = false;
     return false; // No food found
 }
 
