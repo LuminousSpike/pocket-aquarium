@@ -71,12 +71,9 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
     if (nearest_food)
     {
         // Set the direction towards the nearest food
-        *out_dx = (fish->x < nearest_food->x)   ? 1
-                  : (fish->x > nearest_food->x) ? -1
-                                                : 0;
-        *out_dy = (fish->y < nearest_food->y)   ? 1
-                  : (fish->y > nearest_food->y) ? -1
-                                                : 0;
+        *out_dx = COMPARE(fish->x, nearest_food->x);
+        *out_dy = COMPARE(fish->y, nearest_food->y);
+
         fish->has_found_food = true;
         return true; // Food is found
     }
