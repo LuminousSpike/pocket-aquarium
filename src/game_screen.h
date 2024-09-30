@@ -1,0 +1,6 @@
+#pragma once
+
+#define SCREEN_RIGHT_EDGE 4
+#define SCREEN_LEFT_EDGE 12
+#define SCREEN_TOP_EDGE 2
+#define SCREEN_BOTTOM_EDGE 24

@@ -4,6 +4,7 @@
 #include "../res/hungry_guppy_sprite.h"
 #include "coin.h"
 #include "food.h"
+#include "game_screen.h"
 #include "utils.h"
 
 Fish fish_list[MAX_FISH];
@@ -173,11 +174,11 @@ move_fish(Fish *fish)
     }
 
     // Ensure the fish doesn't go off-screen
-    if (fish->x + (fish->dx * speed) >= SCREENWIDTH + 6)
+    if (fish->x + (fish->dx * speed) >= SCREENWIDTH + SCREEN_RIGHT_EDGE)
     {
         fish->dx = -1;
     }
-    else if (fish->x + (fish->dx * speed) < 12)
+    else if (fish->x + (fish->dx * speed) < SCREEN_LEFT_EDGE)
     {
         fish->dx = 1;
     }
@@ -186,11 +187,11 @@ move_fish(Fish *fish)
         fish->x += fish->dx * speed;
     }
 
-    if (fish->y + (fish->dy * speed) >= SCREENHEIGHT)
+    if (fish->y + (fish->dy * speed) >= SCREENHEIGHT + SCREEN_TOP_EDGE)
     {
         fish->dy = -1;
     }
-    else if (fish->y + (fish->dy * speed) < 24)
+    else if (fish->y + (fish->dy * speed) < SCREEN_BOTTOM_EDGE)
     {
         fish->dy = 1;
     }
