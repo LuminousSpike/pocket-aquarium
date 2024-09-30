@@ -60,8 +60,11 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
         Food *food = &food_list[i];
         if (food->active)
         {
-            uint8_t distance = ABSDIFF(fish->x - food->x,
-                                       fish->y - food->y); // Manhattan distance
+            int16_t delta_x = fish->x - food->x;
+            int16_t delta_y = fish->y - food->y;
+            uint8_t distance =
+                manhattan_distance(delta_x, delta_y); // Manhattan distance
+
             if (distance < nearest_distance)
             {
                 nearest_distance = distance;
@@ -73,8 +76,8 @@ nearest_food_position(Fish *fish, int8_t *out_dx, int8_t *out_dy)
     if (nearest_food)
     {
         // Set the direction towards the nearest food
-        *out_dx = COMPARE(fish->x, nearest_food->x);
-        *out_dy = COMPARE(fish->y, nearest_food->y);
+        *out_dx = get_direction(fish->x, nearest_food->x);
+        *out_dy = get_direction(fish->y, nearest_food->y);
 
         fish->has_found_food = true;
         return true; // Food is found

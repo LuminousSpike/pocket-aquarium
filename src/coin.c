@@ -128,8 +128,7 @@ cursor_over_coin(Coin *coin)
         coin->x + 4; // Coin is 8x8, so center x is +4 pixels
     uint8_t coin_center_y = coin->y + 4; // Coin center y is +4 pixels
 
-    // Use the ABS macro from utils.h to check if the centers are within 8
-    // pixels of each other
-    return ABSDIFF(cursor_center_x - coin_center_x,
-                   cursor_center_y - coin_center_y) < 8;
+    // Check if the centers are within 8 pixels of each other
+    return manhattan_distance(cursor_center_x - coin_center_x,
+                              cursor_center_y - coin_center_y) < 8;
 }

@@ -102,8 +102,7 @@ food_near_fish(Fish *fish)
         Food *food = &food_list[i];
         if (food->active)
         {
-            // Use fast proximity check
-            if (ABSDIFF(fish->x - food->x, fish->y - food->y) <= 8)
+            if (manhattan_distance(fish->x - food->x, fish->y - food->y) <= 8)
             {
                 // If food is close to the fish, the fish eats it
                 if (fish->is_hungry)
