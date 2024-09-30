@@ -105,7 +105,7 @@ food_near_fish(Fish *fish)
             if (manhattan_distance(fish->x - food->x, fish->y - food->y) <= 8)
             {
                 // If food is close to the fish, the fish eats it
-                if (fish->is_hungry)
+                if (fish->state == FISH_STATE_HUNGRY)
                 {
                     free_sprite(food->sprite_id);
                     food->active = false;

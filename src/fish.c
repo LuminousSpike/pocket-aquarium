@@ -29,12 +29,11 @@ init_fish(void)
     for (uint8_t i = 0; i < MAX_FISH; i++)
     {
         Fish *fish = &fish_list[i];
+        fish->state = FISH_STATE_NORMAL;
         fish->x = rand_uint8_t(0, screen_width_bounds);
         fish->y = rand_uint8_t(0, screen_height_bounds);
         fish->sprite_id = allocate_sprite();
         fish->hunger_timer = INITIAL_HUNGER;
-        fish->alive = true;
-        fish->is_hungry = false;
 
         // Initialize fish movement direction and random movement timer
         fish->dx = rand_int8_t(-1, 1);
@@ -92,7 +91,7 @@ void
 display_fish(const Fish *fish)
 {
     // Update sprite position based on hunger state
-    if (fish->is_hungry)
+    if (fish->state == FISH_STATE_HUNGRY)
     {
         move_metasprite(hungry_guppy_sprite_metasprites[0], FISH_TILE_INDEX + 1,
                         fish->sprite_id, fish->x, fish->y);
@@ -109,41 +108,62 @@ update_fish(void)
 {
     fish_speed_counter++;
     Fish *fish = &fish_list[fish_speed_counter % MAX_FISH];
-    if (fish->alive)
-    {
-        if (fish->hunger_timer < HUNGER_THRESHOLD)
-        {
-            nearest_food_position(fish, &(fish->dx), &(fish->dy));
-        }
 
+    if (fish->state == FISH_STATE_DEAD)
+    {
+        // No action needed for dead fish
+        return;
+    }
+
+    switch (fish->state)
+    {
+    case FISH_STATE_NORMAL:
         move_fish(fish);
 
-        // Decrease hunger timer
-        fish->is_hungry = (fish->hunger_timer < HUNGER_THRESHOLD);
-
-        if (fish->hunger_timer > 0)
+        // Transition to HUNGRY state if below threshold
+        if (fish->hunger_timer < HUNGER_THRESHOLD)
         {
-            fish->hunger_timer--;
+            fish->state = FISH_STATE_HUNGRY;
         }
-        else
-        {
-            fish->alive = false;
-            hide_sprite(fish->sprite_id);
-        }
+        break;
 
-        // Check if the fish is near food and eats it
-        if (fish->is_hungry && food_near_fish(fish))
+    case FISH_STATE_HUNGRY:
+        // Update direction towards the nearest food
+        nearest_food_position(fish, &(fish->dx), &(fish->dy));
+        move_fish(fish);
+
+        // Check if the fish can eat food
+        if (food_near_fish(fish))
         {
             fish->hunger_timer = INITIAL_HUNGER;
             fish->coin_fullness++;
             fish->has_found_food = false;
+
             if (fish->coin_fullness >= COIN_FULLNESS_LIMIT)
             {
                 fish->coin_fullness = 0;
                 spawn_coin(fish->x, fish->y);
             }
+
             display_fish(fish);
+            fish->state = FISH_STATE_NORMAL;
         }
+        break;
+
+    default:
+        // Handle any unexpected states
+        break;
+    }
+
+    // Common code for decreasing hunger timer and checking for death
+    if (fish->hunger_timer > 0)
+    {
+        fish->hunger_timer--;
+    }
+    else
+    {
+        fish->state = FISH_STATE_DEAD;
+        hide_sprite(fish->sprite_id);
     }
 }
 
@@ -164,7 +184,7 @@ move_fish(Fish *fish)
     }
 
     int8_t speed;
-    if (fish->is_hungry && fish->has_found_food)
+    if (fish->state == FISH_STATE_HUNGRY && fish->has_found_food)
     {
         speed = MAX_FISH_SPEED;
     }
