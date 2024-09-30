@@ -72,24 +72,23 @@ update_food(void)
     food_speed_counter++; // Increment speed counter every frame
     Food *food = &food_list[food_speed_counter % MAX_FOOD];
 
-    // If the food is active, make it fall down
-    if (food->active)
-    {
-        food->y += FOOD_SPEED;
+    if (!food->active)
+        return;
 
-        // Check if the food is off-screen
-        if (food->y >= SCREENHEIGHT)
-        {
-            free_sprite(food->sprite_id);
-            food->active = false;
-            food->sprite_id = NO_SPRITE;
-        }
-        else
-        {
-            // Update the food's sprite position only if necessary
-            move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX,
-                            food->sprite_id, food->x, food->y);
-        }
+    food->y += FOOD_SPEED;
+
+    // Check if the food is off-screen
+    if (food->y >= SCREENHEIGHT)
+    {
+        free_sprite(food->sprite_id);
+        food->active = false;
+        food->sprite_id = NO_SPRITE;
+    }
+    else
+    {
+        // Update the food's sprite position only if necessary
+        move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX,
+                        food->sprite_id, food->x, food->y);
     }
 }
 
@@ -100,19 +99,20 @@ food_near_fish(Fish *fish)
     for (uint8_t i = 0; i < MAX_FOOD; i++)
     {
         Food *food = &food_list[i];
-        if (food->active)
+
+        if (!food->active)
+            return;
+
+        if (manhattan_distance(fish->x - food->x, fish->y - food->y) <= 8)
         {
-            if (manhattan_distance(fish->x - food->x, fish->y - food->y) <= 8)
+            // If food is close to the fish, the fish eats it
+            if (fish->state == FISH_STATE_HUNGRY)
             {
-                // If food is close to the fish, the fish eats it
-                if (fish->state == FISH_STATE_HUNGRY)
-                {
-                    free_sprite(food->sprite_id);
-                    food->active = false;
-                    food->sprite_id = NO_SPRITE;
-                }
-                return true;
+                free_sprite(food->sprite_id);
+                food->active = false;
+                food->sprite_id = NO_SPRITE;
             }
+            return true;
         }
     }
     return false;
