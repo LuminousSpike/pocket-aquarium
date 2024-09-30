@@ -5,7 +5,6 @@
 #include "coin.h"
 #include "food.h"
 #include "utils.h"
-#include <rand.h>
 
 Fish fish_list[MAX_FISH];
 uint8_t fish_speed_counter = 0; // Counter to slow down fish movement
@@ -23,22 +22,24 @@ init_fish(void)
     set_sprite_data(FISH_TILE_INDEX + 2, hungry_guppy_sprite_TILE_COUNT,
                     hungry_guppy_sprite_tiles);
 
+    uint8_t screen_width_bounds = (uint8_t)(SCREENWIDTH - 1);
+    uint8_t screen_height_bounds = (uint8_t)(SCREENHEIGHT - 1);
+
     for (uint8_t i = 0; i < MAX_FISH; i++)
     {
         Fish *fish = &fish_list[i];
-        fish->x = (uint8_t)(rand() % SCREENWIDTH);
-        fish->y = (uint8_t)(rand() % SCREENHEIGHT);
+        fish->x = rand_uint8_t(0, screen_width_bounds);
+        fish->y = rand_uint8_t(0, screen_height_bounds);
         fish->sprite_id = allocate_sprite();
         fish->hunger_timer = INITIAL_HUNGER;
         fish->alive = true;
         fish->is_hungry = false;
 
         // Initialize fish movement direction and random movement timer
-        fish->dx = (rand() % 3) - 1;
-        fish->dy = (rand() % 3) - 1;
+        fish->dx = rand_int8_t(-1, 1);
+        fish->dy = rand_int8_t(-1, 1);
         fish->movement_timer =
-            (rand() % (MAX_MOVE_INTERVAL - MIN_MOVE_INTERVAL + 1)) +
-            MIN_MOVE_INTERVAL;
+            rand_uint8_t(MIN_MOVE_INTERVAL, MAX_MOVE_INTERVAL);
 
         // Set the sprite to the normal fish initially
         move_metasprite(guppy_sprite_metasprites[0], FISH_TILE_INDEX,
@@ -150,12 +151,11 @@ move_fish(Fish *fish)
 {
     if (fish->movement_timer == 0)
     {
-        fish->dx = (rand() % 3) - 1;
-        fish->dy = (rand() % 3) - 1;
-        fish->dspeed = (rand() % MAX_FISH_SPEED) + 1;
+        fish->dx = rand_int8_t(-1, 1);
+        fish->dy = rand_int8_t(-1, 1);
+        fish->dspeed = rand_int8_t(1, MAX_FISH_SPEED);
         fish->movement_timer =
-            (rand() % (MAX_MOVE_INTERVAL - MIN_MOVE_INTERVAL + 1)) +
-            MIN_MOVE_INTERVAL;
+            rand_uint8_t(MIN_MOVE_INTERVAL, MAX_MOVE_INTERVAL);
     }
     else
     {

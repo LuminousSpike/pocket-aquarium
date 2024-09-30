@@ -34,4 +34,10 @@ manhattan_distance(int16_t delta_x, int16_t delta_y);
 inline int8_t
 get_direction(int16_t from, int16_t to);
 
+inline int8_t
+rand_int8_t(int8_t min, int8_t max);
+
+inline uint8_t
+rand_uint8_t(uint8_t min, uint8_t max);
+
 #endif // UTILS_H

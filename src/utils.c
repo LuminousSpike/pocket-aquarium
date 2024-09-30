@@ -1,6 +1,7 @@
 // utils.c
 #include "utils.h"
 #include <limits.h> // For INT16_MIN
+#include <rand.h>
 #include <stdint.h>
 
 inline uint8_t
@@ -48,4 +49,30 @@ get_direction(int16_t from, int16_t to)
     {
         return 0; // No movement
     }
+}
+
+inline int8_t
+rand_int8_t(int8_t min, int8_t max)
+{
+    if (max < min)
+    {
+        // Swap if max is less than min
+        int8_t temp = max;
+        max = min;
+        min = temp;
+    }
+    return (rand() % (max - min + 1)) + min;
+}
+
+inline uint8_t
+rand_uint8_t(uint8_t min, uint8_t max)
+{
+    if (max < min)
+    {
+        // Swap if max is less than min
+        uint8_t temp = max;
+        max = min;
+        min = temp;
+    }
+    return (rand() % (max - min + 1)) + min;
 }
