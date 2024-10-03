@@ -22,7 +22,8 @@ init_food(void)
 {
     // Load the food pellet tiles into VRAM
     set_sprite_data(FOOD_TILE_INDEX, food_sprite_TILE_COUNT, food_sprite_tiles);
-    set_sprite_data(FOOD_TILE_INDEX + 1, blank_tile_TILE_COUNT, blank_tile_tiles);
+    set_sprite_data(FOOD_TILE_INDEX + 1, blank_tile_TILE_COUNT,
+                    blank_tile_tiles);
 
     // Initialize all food pellets as inactive
     for (uint8_t i = 0; i < MAX_FOOD; i++)
@@ -55,8 +56,10 @@ spawn_food(uint8_t x, uint8_t y)
             food->active = true;
 
             // Set the food's sprite tile
-            set_sprite_data(FOOD_TILE_INDEX, food_sprite_TILE_COUNT, food_sprite_tiles);
-            move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX, food->sprite_id, food->x, food->y);
+            set_sprite_data(FOOD_TILE_INDEX, food_sprite_TILE_COUNT,
+                            food_sprite_tiles);
+            move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX,
+                            food->sprite_id, food->x, food->y);
             break;
         }
     }
@@ -67,50 +70,28 @@ void
 update_food(void)
 {
     food_speed_counter++; // Increment speed counter every frame
+    Food *food = &food_list[food_speed_counter % MAX_FOOD];
 
-    for (uint8_t i = 0; i < MAX_FOOD; i++)
+    if (!food->active)
+        return;
+
+    food->y += FOOD_SPEED;
+
+    // Check if the food is off-screen
+    if (food->y >= SCREENHEIGHT)
     {
-        Food *food = &food_list[i];
-
-        // If the food is active, make it fall down
-        if (food->active && food_speed_counter % 6 == 0)
-        {
-            food->y += FOOD_SPEED;
-
-            // Check if the food is off-screen
-            if (food->y >= SCREENHEIGHT)
-            {
-                free_sprite(food->sprite_id);
-                food->active = false;
-                food->sprite_id = NO_SPRITE;
-            }
-            else
-            {
-                // Update the food's sprite position only if necessary
-                move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX, food->sprite_id, food->x, food->y);
-            }
-
-            // Instead of checking all fish, we do grid-based proximity checks here
-            // Check if the food is near any fish
-            for (uint8_t j = 0; j < MAX_FISH; j++)
-            {
-                Fish *fish = &fish_list[j];
-
-                // Use coarse proximity check (grid-based)
-                if (fish->alive && ABS(fish->x - food->x) <= 8 && ABS(fish->y - food->y) <= 8)
-                {
-                    // If food is close to the fish, the fish eats it
-                    free_sprite(food->sprite_id);
-                    food->active = false;
-                    food->sprite_id = NO_SPRITE;
-                    break; // Exit once food is eaten
-                }
-            }
-        }
+        free_sprite(food->sprite_id);
+        food->active = false;
+        food->sprite_id = NO_SPRITE;
+    }
+    else
+    {
+        // Update the food's sprite position only if necessary
+        move_metasprite(food_sprite_metasprites[0], FOOD_TILE_INDEX,
+                        food->sprite_id, food->x, food->y);
     }
 }
 
-// Optimized proximity check using grid-based partitioning
 bool
 food_near_fish(Fish *fish)
 {
@@ -118,13 +99,20 @@ food_near_fish(Fish *fish)
     for (uint8_t i = 0; i < MAX_FOOD; i++)
     {
         Food *food = &food_list[i];
-        if (food->active)
+
+        if (!food->active)
+            return;
+
+        if (manhattan_distance(fish->x - food->x, fish->y - food->y) <= 8)
         {
-            // Use fast proximity check
-            if (ABS(fish->x - food->x) <= 8 && ABS(fish->y - food->y) <= 8)
+            // If food is close to the fish, the fish eats it
+            if (fish->state == FISH_STATE_HUNGRY)
             {
-                return true;
+                free_sprite(food->sprite_id);
+                food->active = false;
+                food->sprite_id = NO_SPRITE;
             }
+            return true;
         }
     }
     return false;

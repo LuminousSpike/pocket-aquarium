@@ -1,6 +1,7 @@
 #include "cursor.h"
 #include "../res/cursor_sprite.h" // Include the cursor sprite data
 #include "food.h"
+#include "game_screen.h"
 #include "score.h"
 
 #define FOOD_SPAWN_INTERVAL 30 // 0.5 seconds at ~59.7 FPS
@@ -33,13 +34,13 @@ void
 move_cursor(void)
 {
     // Update cursor position based on input
-    if (joypad() & J_LEFT && cursor.x - 8 > 0)
+    if (joypad() & J_LEFT && cursor.x > 0 + SCREEN_LEFT_EDGE)
         cursor.x--;
-    if (joypad() & J_RIGHT && cursor.x < SCREENWIDTH)
+    if (joypad() & J_RIGHT && cursor.x < SCREENWIDTH + SCREEN_RIGHT_EDGE)
         cursor.x++;
-    if (joypad() & J_UP && cursor.y > 16)
+    if (joypad() & J_UP && cursor.y > SCREEN_BOTTOM_EDGE)
         cursor.y--;
-    if (joypad() & J_DOWN && cursor.y < SCREENHEIGHT + 8)
+    if (joypad() & J_DOWN && cursor.y < SCREENHEIGHT + SCREEN_TOP_EDGE)
         cursor.y++;
 
     // Update the metasprite position to move the 8x16 cursor

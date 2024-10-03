@@ -22,7 +22,7 @@ typedef struct
 } Coin;
 
 extern Coin coin_list[MAX_COINS];
-extern uint16_t player_coins;
+extern uint8_t player_coins;
 
 void
 init_coins(void);

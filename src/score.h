@@ -20,7 +20,7 @@ typedef struct score_t
  */
 typedef enum score_food_t
 {
-    SCORE_FOOD_BASIC = 10,
+    SCORE_FOOD_BASIC = 2,
 } score_food_t;
 
 /**
