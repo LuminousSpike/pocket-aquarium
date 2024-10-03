@@ -20,7 +20,7 @@ abs_val(int16_t x)
     return (uint8_t)x;
 }
 
-inline uint8_t
+uint8_t
 manhattan_distance(int16_t delta_x, int16_t delta_y)
 {
     uint8_t abs_x = abs_val(delta_x);
@@ -34,7 +34,7 @@ manhattan_distance(int16_t delta_x, int16_t delta_y)
     return abs_x + abs_y;
 }
 
-inline int8_t
+int8_t
 get_direction(int16_t from, int16_t to)
 {
     if (from < to)
@@ -51,7 +51,7 @@ get_direction(int16_t from, int16_t to)
     }
 }
 
-inline int8_t
+int8_t
 rand_int8_t(int8_t min, int8_t max)
 {
     if (max < min)
@@ -64,7 +64,7 @@ rand_int8_t(int8_t min, int8_t max)
     return (rand() % (max - min + 1)) + min;
 }
 
-inline uint8_t
+uint8_t
 rand_uint8_t(uint8_t min, uint8_t max)
 {
     if (max < min)
